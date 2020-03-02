@@ -53,6 +53,14 @@ bool ActorGraph::buildGraphFromFile(const char* filename) {
         int year = stoi(record[2]);
 
         // TODO: we have an actor/movie relationship to build the graph
+        // create actor and movie objects first
+        Actor* a = new Actor(actor);
+        Movie* m = new Movie(title, year);
+        a->movies.push_back(m);
+
+        // adding to the hash tables
+        Actors.insert({a->name, m});
+        Movies.insert({m->fullT, a});
     }
 
     // if failed to read the file, clear the graph and return
