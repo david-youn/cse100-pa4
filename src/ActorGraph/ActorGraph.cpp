@@ -23,10 +23,8 @@ bool ActorGraph::buildGraphFromFile(const char* filename) {
     ifstream infile(filename);
     bool readHeader = false;
 
-    cout << "read: " << filename << endl;
     while (infile) {
         string s;
-        cout << "s: " << s << endl;
         if (!getline(infile, s)) break;
 
         // skip the header of the file
@@ -38,7 +36,6 @@ bool ActorGraph::buildGraphFromFile(const char* filename) {
         // read each line of the dataset to get the movie actor relation
         istringstream ss(s);
         vector<string> record;
-        cout << "record: " << record[0] << endl;
         while (ss) {
             string str;
             if (!getline(ss, str, '\t')) break;
@@ -55,9 +52,6 @@ bool ActorGraph::buildGraphFromFile(const char* filename) {
         string title(record[1]);
         int year = stoi(record[2]);
 
-        cout << "actor: " << actor << endl;
-        cout << "title: " << title << endl;
-        cout << "year: " << year << endl;
         // TODO: we have an actor/movie relationship to build the graph
         // create actor and movie objects first
         Actor* a = new Actor(actor);

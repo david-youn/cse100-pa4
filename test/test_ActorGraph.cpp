@@ -26,6 +26,8 @@ TEST_F(ActorGraphFixture, EMPTY_TEST) {
 
 TEST(ActorGraphTests, EMPTY_TEST) {
     ActorGraph ag;
-    ag.smallTest();
-    ASSERT_EQ(ag.getMoviesSize(), 4);
+    // ag.smallTest();
+    ag.buildGraphFromFile("../data/small_actor_graph.tsv");
+    ASSERT_EQ(ag.getMoviesSize(), 7);
+    ASSERT_EQ(ag.getActorsSize(), 7);
 }

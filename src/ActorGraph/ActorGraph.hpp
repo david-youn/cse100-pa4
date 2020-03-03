@@ -82,8 +82,6 @@ class ActorGraph {
     int getMoviesSize() { return Movies.size(); }
     int getActorsSize() { return Actors.size(); }
 
-    void smallTest() { buildGraphFromFile("data/small_actor_graph.tsv"); }
-
     /* TODO */
     ~ActorGraph();
 };
