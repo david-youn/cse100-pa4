@@ -5,6 +5,7 @@
 #include "ActorGraph.hpp"
 #include <fstream>
 #include <iostream>
+#include <queue>
 #include <sstream>
 #include <string>
 
@@ -53,15 +54,30 @@ bool ActorGraph::buildGraphFromFile(const char* filename) {
         int year = stoi(record[2]);
 
         // TODO: we have an actor/movie relationship to build the graph
-        // create actor and movie objects first
-        Actor* a = new Actor(actor);
-        Movie* m = new Movie(title, year);
+
+        // check if actor and movie already exist or not
+        Actor* a;
+        Movie* m;
+        // if not, create actor and movie objects first
+        if (Actors.count(actor) == 0) {
+            a = new Actor(actor);
+            Actors.insert({a->name, a});
+        } else {
+            a = Actors.at(actor);
+        }
+        string key = title + "#@" + to_string(year);
+        if (Movies.count(key)) {
+            m = new Movie(title, year);
+            Movies.insert({m->fullT, m});
+        } else {
+            m = Movies.at(key);
+        }
+
         a->movies.push_back(m);
         m->actors.push_back(a);
 
-        // adding to the hash tables
-        Actors.insert({a->name, m});
-        Movies.insert({m->fullT, a});
+        cout << a->name << ": a->movie.size(): " << a->movies.size() << endl;
+        cout << m->title << ": m->actors.size(): " << m->actors.size() << endl;
     }
 
     // if failed to read the file, clear the graph and return
@@ -76,7 +92,60 @@ bool ActorGraph::buildGraphFromFile(const char* filename) {
 
 /* TODO */
 void ActorGraph::BFS(const string& fromActor, const string& toActor,
-                     string& shortestPath) {}
+                     string& shortestPath) {
+    queue<Actor*> toExplore;
+    Actor* toFind = Actors.at(fromActor);
+    cout << "Actor: " << toFind->name << endl;
+    toExplore.push(toFind);
+    while (toExplore.size() != 0) {
+        cout << "toExplore.size: " + toExplore.size() << endl;
+        Actor* curr = toExplore.front();
+        curr->visited = true;
+        toExplore.pop();
+        Movie* currMovie;
+        Actor* currActor;
+        // goes through all the movies the actor is in
+        for (int i = 0; i < curr->movies.size(); i++) {
+            currMovie = curr->movies.at(i);
+            cout << "currMovie: " << currMovie->title << endl;
+            if (currMovie->visited) {
+                continue;
+            }
+            currMovie->prevActor = curr;
+            currMovie->visited = true;
+
+            // goes through all the actors in that movie
+            for (int j = 0; j < currMovie->actors.size(); j++) {
+                currActor = currMovie->actors.at(j);
+                cout << "currMovie->actors.size(): " << currMovie->actors.size()
+                     << endl;
+                cout << "actors from currMovie: " << currActor->name << endl;
+                if (currActor->visited) {
+                    continue;
+                }
+                currActor->prevMovie = currMovie;
+                currMovie->visited = true;
+                if ((currActor->name).compare(toActor) == 0) {
+                    // backtrack through all the previous nodes and return the
+                    // string that is built
+                    Actor* bActor = currActor;
+                    shortestPath = "(" + bActor->name + ")";
+                    while (bActor->prevMovie != nullptr) {
+                        string MovieActor = "";
+                        Movie* bMovie = bActor->prevMovie;
+                        MovieActor = "--[" + bMovie->fullT + "]-->";
+                        bActor = bMovie->prevActor;
+                        MovieActor = "(" + bActor->name + ")" + MovieActor;
+                        shortestPath = MovieActor + shortestPath;
+                    }
+                    return;
+                } else {
+                    toExplore.push(currActor);
+                }
+            }
+        }
+    }
+}
 
 /* TODO */
 void ActorGraph::predictLink(const string& queryActor,

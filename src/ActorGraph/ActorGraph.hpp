@@ -8,6 +8,7 @@
 #include <iostream>
 #include <unordered_map>
 #include <vector>
+#include "limits.h"
 //#include "Actor.hpp"
 //#include "Movie.hpp"
 
@@ -22,10 +23,13 @@ struct Movie {
     string fullT;
     vector<Actor*> actors;
 
+    Actor* prevActor = nullptr;
+    bool visited = false;
+
     Movie(string t, int y) {
         title = t;
         year = y;
-        fullT = title + to_string(year);
+        fullT = title + "#@" + to_string(year);
     }
 
     bool operator==(const Movie& m) const {
@@ -35,6 +39,9 @@ struct Movie {
 
 struct Actor {
     string name;
+    Movie* prevMovie = nullptr;
+    bool visited = false;
+
     vector<Movie*> movies;
     Actor(string n) { name = n; }
 
@@ -61,8 +68,8 @@ class ActorGraph {
     // creating user-defined hash functions for Movies and Actors
     // unordered_map<Movie, Actor*, MovieHF> Movies;
     // unordered_map<Actor, Movie*, ActorHF> Actors;
-    unordered_map<string, Actor*> Movies;
-    unordered_map<string, Movie*> Actors;
+    unordered_map<string, Actor*> Actors;
+    unordered_map<string, Movie*> Movies;
 
   public:
     /* TODO */
