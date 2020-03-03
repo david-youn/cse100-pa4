@@ -94,13 +94,9 @@ void ActorGraph::BFS(const string& fromActor, const string& toActor,
     vector<Movie*> ms;
     vector<Actor*> as;
 
-    cout << "shortestPath: " << shortestPath << endl;
-    cout << "fromActor: " << fromActor << endl;
     queue<Actor*> toExplore;
     Actor* toFind = Actors.at(fromActor);
-    cout << "toFind: " << toFind->name << endl;
     toExplore.push(toFind);
-    cout << "toExplore size: " << toExplore.size() << endl;
     while (toExplore.size() != 0) {
         Actor* curr = toExplore.front();
         curr->visited = true;
@@ -170,4 +166,9 @@ void ActorGraph::predictLink(const string& queryActor,
                              unsigned int numPrediction) {}
 
 /* TODO */
-ActorGraph::~ActorGraph() {}
+ActorGraph::~ActorGraph() {
+    // Movies.erase(Movies.begin(), Movies.end());
+    // Actors.erase(Actors.begin(), Actors.end());
+    Movies.clear();
+    Actors.clear();
+}
