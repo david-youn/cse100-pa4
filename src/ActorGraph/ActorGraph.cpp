@@ -66,7 +66,7 @@ bool ActorGraph::buildGraphFromFile(const char* filename) {
             a = Actors.at(actor);
         }
         string key = title + "#@" + to_string(year);
-        if (Movies.count(key)) {
+        if (Movies.count(key) == 0) {
             m = new Movie(title, year);
             Movies.insert({m->fullT, m});
         } else {
@@ -75,9 +75,6 @@ bool ActorGraph::buildGraphFromFile(const char* filename) {
 
         a->movies.push_back(m);
         m->actors.push_back(a);
-
-        cout << a->name << ": a->movie.size(): " << a->movies.size() << endl;
-        cout << m->title << ": m->actors.size(): " << m->actors.size() << endl;
     }
 
     // if failed to read the file, clear the graph and return
@@ -95,10 +92,8 @@ void ActorGraph::BFS(const string& fromActor, const string& toActor,
                      string& shortestPath) {
     queue<Actor*> toExplore;
     Actor* toFind = Actors.at(fromActor);
-    cout << "Actor: " << toFind->name << endl;
     toExplore.push(toFind);
     while (toExplore.size() != 0) {
-        cout << "toExplore.size: " + toExplore.size() << endl;
         Actor* curr = toExplore.front();
         curr->visited = true;
         toExplore.pop();
@@ -107,7 +102,6 @@ void ActorGraph::BFS(const string& fromActor, const string& toActor,
         // goes through all the movies the actor is in
         for (int i = 0; i < curr->movies.size(); i++) {
             currMovie = curr->movies.at(i);
-            cout << "currMovie: " << currMovie->title << endl;
             if (currMovie->visited) {
                 continue;
             }
@@ -117,9 +111,6 @@ void ActorGraph::BFS(const string& fromActor, const string& toActor,
             // goes through all the actors in that movie
             for (int j = 0; j < currMovie->actors.size(); j++) {
                 currActor = currMovie->actors.at(j);
-                cout << "currMovie->actors.size(): " << currMovie->actors.size()
-                     << endl;
-                cout << "actors from currMovie: " << currActor->name << endl;
                 if (currActor->visited) {
                     continue;
                 }
