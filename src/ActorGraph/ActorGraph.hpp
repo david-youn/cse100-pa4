@@ -11,12 +11,16 @@
 //#include "Actor.hpp"
 //#include "Movie.hpp"
 
+typedef struct Movie Movie;
+typedef struct Actor Actor;
+
 using namespace std;
 
 struct Movie {
     string title;
     int year;
     string fullT;
+    vector<Actor*> actors;
 
     Movie(string t, int y) {
         title = t;
@@ -40,9 +44,7 @@ struct Actor {
 class MovieHF {
   public:
     // hash function to be used
-    string operator()(const Movie& movie) const {
-        return movie.title + to_string(movie.year);
-    }
+    string operator()(const Movie& movie) const { return movie.fullT; }
 };
 
 class ActorHF {
@@ -76,6 +78,11 @@ class ActorGraph {
     /* TODO */
     void predictLink(const string& queryActor, vector<string>& predictionNames,
                      unsigned int numPrediction);
+
+    int getMoviesSize() { return Movies.size(); }
+    int getActorsSize() { return Actors.size(); }
+
+    void smallTest() { buildGraphFromFile("data/small_actor_graph.tsv"); }
 
     /* TODO */
     ~ActorGraph();
