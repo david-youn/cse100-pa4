@@ -90,12 +90,21 @@ bool ActorGraph::buildGraphFromFile(const char* filename) {
 /* TODO */
 void ActorGraph::BFS(const string& fromActor, const string& toActor,
                      string& shortestPath) {
+    // vector to hold all actors and movies added to the pq
+    vector<Movie*> ms;
+    vector<Actor*> as;
+
+    cout << "shortestPath: " << shortestPath << endl;
+    cout << "fromActor: " << fromActor << endl;
     queue<Actor*> toExplore;
     Actor* toFind = Actors.at(fromActor);
+    cout << "toFind: " << toFind->name << endl;
     toExplore.push(toFind);
+    cout << "toExplore size: " << toExplore.size() << endl;
     while (toExplore.size() != 0) {
         Actor* curr = toExplore.front();
         curr->visited = true;
+        as.push_back(curr);
         toExplore.pop();
         Movie* currMovie;
         Actor* currActor;
@@ -107,6 +116,7 @@ void ActorGraph::BFS(const string& fromActor, const string& toActor,
             }
             currMovie->prevActor = curr;
             currMovie->visited = true;
+            ms.push_back(currMovie);
 
             // goes through all the actors in that movie
             for (int j = 0; j < currMovie->actors.size(); j++) {
@@ -115,7 +125,8 @@ void ActorGraph::BFS(const string& fromActor, const string& toActor,
                     continue;
                 }
                 currActor->prevMovie = currMovie;
-                currMovie->visited = true;
+                currActor->visited = true;
+                as.push_back(currActor);
                 if ((currActor->name).compare(toActor) == 0) {
                     // backtrack through all the previous nodes and return the
                     // string that is built
@@ -128,6 +139,21 @@ void ActorGraph::BFS(const string& fromActor, const string& toActor,
                         bActor = bMovie->prevActor;
                         MovieActor = "(" + bActor->name + ")" + MovieActor;
                         shortestPath = MovieActor + shortestPath;
+                    }
+
+                    // emptying the pq before returning the shortest path
+                    while (toExplore.size() != 0) {
+                        toExplore.pop();
+                    }
+                    for (int a = 0; a < as.size(); a++) {
+                        Actor* myActor = as.at(a);
+                        myActor->visited = false;
+                        myActor->prevMovie = nullptr;
+                    }
+                    for (int m = 0; m < ms.size(); m++) {
+                        Movie* myMovie = ms.at(m);
+                        myMovie->visited = false;
+                        myMovie->prevActor = nullptr;
                     }
                     return;
                 } else {

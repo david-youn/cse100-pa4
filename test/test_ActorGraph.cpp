@@ -3,7 +3,7 @@
 
 using namespace std;
 using namespace testing;
-
+/*
 class ActorGraphFixture : public ::testing::Test {
   protected:
     ActorGraph ag;
@@ -28,3 +28,4 @@ TEST(ActorGraphTest, BIG_TEST) {
     ASSERT_EQ(bag.getMoviesSize(), 325354);
     ASSERT_EQ(bag.getActorsSize(), 412528);
 }
+*/
