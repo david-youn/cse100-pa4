@@ -162,42 +162,20 @@ void ActorGraph::BFS(const string& fromActor, const string& toActor,
 }
 
 // small tester function
-void ActorGraph::smallTest() {
-    Actor* a = new Actor("a");
-    Actor* b = new Actor("b");
-    Actor* c = new Actor("c");
-    Actor* d = new Actor("d");
-    Actor* e = new Actor("e");
-
+void ActorGraph::smallTest(Actor* a, Actor* b, Actor* c, Actor* d, Actor* e,
+                           Movie* m1, Movie* m2, Movie* m3, Movie* m4,
+                           Movie* m5) {
     Actors.insert({a->name, a});
     Actors.insert({b->name, b});
     Actors.insert({c->name, c});
     Actors.insert({d->name, d});
     Actors.insert({e->name, e});
 
-    Movie* m1 = new Movie("m1", 2000);
-    Movie* m2 = new Movie("m2", 2001);
-    Movie* m3 = new Movie("m3", 2002);
-    Movie* m4 = new Movie("m4", 2020);
-    Movie* m5 = new Movie("m5", 2012);
-
     Movies.insert({m1->fullT, m1});
     Movies.insert({m2->fullT, m2});
     Movies.insert({m3->fullT, m3});
     Movies.insert({m4->fullT, m4});
     Movies.insert({m5->fullT, m5});
-
-    a->movies = {m1, m2};
-    b->movies = {m2, m3, m5};
-    c->movies = {m3, m1};
-    d->movies = {m4, m5};
-    e->movies = {m5, m4};
-
-    m1->actors = {a, c};
-    m2->actors = {a, b};
-    m3->actors = {c, b, a};
-    m4->actors = {d, e};
-    m5->actors = {d, e, b};
 }
 
 /* TODO */
