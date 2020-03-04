@@ -89,6 +89,9 @@ class ActorGraph {
     int getMoviesSize() { return Movies.size(); }
     int getActorsSize() { return Actors.size(); }
 
+    // small public tester method
+    void smallTest();
+
     /* TODO */
     ~ActorGraph();
 };

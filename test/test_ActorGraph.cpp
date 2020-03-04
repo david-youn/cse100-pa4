@@ -29,3 +29,14 @@ TEST(ActorGraphTest, BIG_TEST) {
     ASSERT_EQ(bag.getActorsSize(), 412528);
 }
 */
+
+TEST(ActorGraphTest, SMALL_TEST) {
+    ActorGraph small;
+    small.smallTest();
+    ASSERT_EQ(small.getMoviesSize(), 5);
+    ASSERT_EQ(small.getActorsSize(), 5);
+    string path = "";
+    small.BFS("a", "e", path);
+    ASSERT_EQ(path.compare("(a)--[m2#@2001]-->(b)--[m5#@2012]-->(e)"), 0);
+    small.~ActorGraph();
+}
