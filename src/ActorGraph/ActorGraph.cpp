@@ -95,9 +95,13 @@ void ActorGraph::BFS(const string& fromActor, const string& toActor,
     vector<Actor*> as;
 
     queue<Actor*> toExplore;
-    Actor* toFind = Actors.at(fromActor);
+    try {
+        Actor* toFind = Actors.at(fromActor);
+        toExplore.push(toFind);
 
-    toExplore.push(toFind);
+    } catch (exception& e) {
+        return;
+    }
     while (toExplore.size() != 0) {
         Actor* curr = toExplore.front();
         curr->visited = true;
