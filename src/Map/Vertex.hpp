@@ -19,9 +19,26 @@ class Vertex {
                              // all outgoing edges
 
     // TODO: you may add more member variables here
+    // referenced from Stepik textbook
+    int dist;
+    Vertex* prev;
+    bool done;
 
     /* The constructor that creates a new vertex */
     Vertex(const string& name, float x, float y) : name(name), x(x), y(y) {}
+};
+
+struct VertexComp {
+    /* TODO */
+    // overrides comparator that takes in two vertices and weights returns
+    // higher priority which is smaller weight
+    bool operator()(pair<int, Vertex*>*& lhs, pair<int, Vertex*>*& rhs) const {
+        if (lhs->first != rhs->first) {
+            return lhs->first < rhs->first;
+        } else {
+            return true;
+        }
+    }
 };
 
 #endif  // VERTEX_HPP

@@ -1,5 +1,11 @@
 
 #include "Map.hpp"
+#include <iostream>
+#include <queue>
+#include <utility>
+#include "limits.h"
+
+using namespace std;
 
 /* TODO */
 Map::Map() {}
@@ -90,7 +96,51 @@ bool Map::addEdge(const string& name1, const string& name2) {
 
 /* TODO */
 void Map::Dijkstra(const string& from, const string& to,
-                   vector<Vertex*>& shortestPath) {}
+                   vector<Vertex*>& shortestPath) {
+    priority_queue<pair<int, Vertex*>, vector<pair<int, Vertex*>>, VertexComp>
+        pq;
+    for (int i = 0; i < vertices.size(); i++) {
+        (vertices.at(i))->dist = INT_MAX;
+        (vertices.at(i))->prev = nullptr;
+        (vertices.at(i))->done = false;
+    }
+
+    // error catching if vertex doesn't exist
+    try {
+        Vertex* startV = vertices.at(vertexId.at(from));
+        startV->dist = 0;
+        pair<int, Vertex*> start = make_pair(0, startV);
+        pq.push(start);
+
+        Vertex* endV = vertices.at(vertexId.at(to));
+    } catch (exception& e) {
+        return;
+    }
+
+    // while priority queue is not empty
+    while (pq.size() != 0) {
+        Vertex* curr = pq.top().second;
+        pq.pop();
+
+        if (curr->done == false) {
+            curr->done = true;
+
+            // for every edge from curr
+            for (int e = 0; e < curr->outEdges.size(); e++) {
+                Edge* edge = curr->outEdges.at(e);
+                Vertex* targ = edge->target;
+                int totalDist = curr->dist + edge->weight;
+                // if there is a smaller weighted path
+                if (totalDist < targ->dist) {
+                    targ->prev = curr;
+                    targ->dist = totalDist;
+                    pair<int, Vertex*> newPair = make_pair(totalDist, targ);
+                    pq.push(newPair);
+                }
+            }
+        }
+    }
+}
 
 /* TODO */
 void Map::findMST(vector<Edge*>& MST) {}
