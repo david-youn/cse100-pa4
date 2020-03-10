@@ -108,11 +108,13 @@ void Map::Dijkstra(const string& from, const string& to,
     // error catching if vertex doesn't exist
     try {
         Vertex* startV = vertices.at(vertexId.at(from));
+
         startV->dist = 0;
         pair<int, Vertex*> start = make_pair(0, startV);
         pq.push(start);
 
         Vertex* endV = vertices.at(vertexId.at(to));
+
     } catch (exception& e) {
         return;
     }
@@ -121,10 +123,12 @@ void Map::Dijkstra(const string& from, const string& to,
     while (pq.size() != 0) {
         Vertex* curr = pq.top().second;
 
-        if ((curr->name).compare(to)) {
+        if ((curr->name).compare(to) == 0) {
             while (curr->prev != nullptr) {
-                shortestPath.insert(shortestPath.begin(), curr->prev);
+                shortestPath.insert(shortestPath.begin(), curr);
+                curr = curr->prev;
             }
+            shortestPath.insert(shortestPath.begin(), curr);
 
             while (pq.size() != 0) {
                 pq.pop();
