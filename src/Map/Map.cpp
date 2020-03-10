@@ -120,6 +120,18 @@ void Map::Dijkstra(const string& from, const string& to,
     // while priority queue is not empty
     while (pq.size() != 0) {
         Vertex* curr = pq.top().second;
+
+        if ((curr->name).compare(to)) {
+            while (curr->prev != nullptr) {
+                shortestPath.insert(shortestPath.begin(), curr->prev);
+            }
+
+            while (pq.size() != 0) {
+                pq.pop();
+            }
+            return;
+        }
+
         pq.pop();
 
         if (curr->done == false) {
