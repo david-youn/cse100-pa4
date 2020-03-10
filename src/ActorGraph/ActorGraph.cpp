@@ -163,6 +163,16 @@ void ActorGraph::BFS(const string& fromActor, const string& toActor,
             }
         }
     }
+    for (int a = 0; a < as.size(); a++) {
+        Actor* myActor = as.at(a);
+        myActor->visited = false;
+        myActor->prevMovie = nullptr;
+    }
+    for (int m = 0; m < ms.size(); m++) {
+        Movie* myMovie = ms.at(m);
+        myMovie->visited = false;
+        myMovie->prevActor = nullptr;
+    }
 }
 
 // small tester function
