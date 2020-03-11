@@ -19,10 +19,14 @@ class Vertex {
                              // all outgoing edges
 
     // TODO: you may add more member variables here
-    // referenced from Stepik textbook
+    // referenced from Stepik textbook used for Dijkstra's algorithm
     int dist;
     Vertex* prev;
     bool done;
+
+    // used for MST
+    Vertex* parent;
+    int treeSize;
 
     /* The constructor that creates a new vertex */
     Vertex(const string& name, float x, float y) : name(name), x(x), y(y) {}

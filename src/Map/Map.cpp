@@ -159,7 +159,68 @@ void Map::Dijkstra(const string& from, const string& to,
 }
 
 /* TODO */
-void Map::findMST(vector<Edge*>& MST) {}
+void Map::findMST(vector<Edge*>& MST) {
+    priority_queue<Edge*, vector<Edge*>, EdgeComp> edge_pq;
+
+    // fills the priority queue with edges
+    for (int i = 0; i < undirectedEdges.size(); i++) {
+        edge_pq.push(undirectedEdges.at(i));
+
+        // sets the parent of all to nullptr, creating a forest of single nodes
+        undirectedEdges.at(i)->source->parent = nullptr;
+        undirectedEdges.at(i)->source->treeSize = 1;
+    }
+
+    while (edge_pq.size() != 0) {
+        Edge* curr = edge_pq.top();
+        edge_pq.pop();
+        Union(curr);
+    }
+
+    for (int e = 0; e < undirectedEdges.size(); e++) {
+        if (undirectedEdges.at(e)->used == true) {
+            undirectedEdges.at(e)->used = false;
+            MST.push_back(undirectedEdges.at(e));
+        }
+    }
+}
+
+void Map::Union(Edge* edge) {
+    Vertex* v1 = edge->source;
+    Vertex* v2 = edge->target;
+
+    Vertex* v1_sentinel = Find(v1);
+    Vertex* v2_sentinel = Find(v2);
+
+    if (v1_sentinel == v2_sentinel) {
+        return;
+    } else if (v1_sentinel->treeSize > v2_sentinel->treeSize) {
+        v2_sentinel->parent = v1_sentinel;
+        v1_sentinel->treeSize = v1_sentinel->treeSize + v2_sentinel->treeSize;
+        edge->used = true;
+    } else {
+        v1_sentinel->parent = v2_sentinel;
+        v2_sentinel->treeSize = v2_sentinel->treeSize + v1_sentinel->treeSize;
+        edge->used = true;
+    }
+}
+
+Vertex* Map::Find(Vertex* v) {
+    Vertex* temp = v;
+
+    // finds parent node
+    while (v->parent != nullptr) {
+        v = v->parent;
+    }
+
+    // connects all nodes up the path directly to parent
+    while (temp->parent != v) {
+        Vertex* connect = temp;
+        temp = temp->parent;
+        connect->parent = v;
+    }
+    return v;
+}
 
 /* TODO */
 void Map::crucialRoads(vector<Edge*>& roads) {}

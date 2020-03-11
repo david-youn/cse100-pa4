@@ -49,6 +49,10 @@ class Map {
     /* TODO */
     void findMST(vector<Edge*>& MST);
 
+    void Union(Edge* edge);
+
+    Vertex* Find(Vertex* v);
+
     /* TODO */
     void crucialRoads(vector<Edge*>& roads);
 

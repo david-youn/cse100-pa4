@@ -18,9 +18,21 @@ class Edge {
     Vertex* target;
     float weight;  // the Euclidean distance between source and target vertices
 
+    // used in MST
+    bool used = false;
+
     /* The constructor that creates a new edge */
     Edge(Vertex* source, Vertex* target, float weight)
         : source(source), target(target), weight(weight) {}
+};
+
+struct EdgeComp {
+    /* TODO */
+    // overrides comparator taking in two edges and gives higher priority to
+    // smaller weight
+    bool operator()(Edge* lhs, Edge* rhs) const {
+        return lhs->weight > rhs->weight;
+    }
 };
 
 #endif  // EDGE_HPP
