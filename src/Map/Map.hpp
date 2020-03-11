@@ -56,6 +56,8 @@ class Map {
     /* TODO */
     void crucialRoads(vector<Edge*>& roads);
 
+    bool crucialBFS(Edge* e);
+
     /* Destructor of Map graph */
     ~Map();
 };

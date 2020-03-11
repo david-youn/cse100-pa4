@@ -173,6 +173,7 @@ void Map::findMST(vector<Edge*>& MST) {
 
     while (edge_pq.size() != 0) {
         Edge* curr = edge_pq.top();
+
         edge_pq.pop();
         Union(curr);
     }
@@ -206,24 +207,63 @@ void Map::Union(Edge* edge) {
 }
 
 Vertex* Map::Find(Vertex* v) {
-    Vertex* temp = v;
-
+    Vertex* sentinel = v;
     // finds parent node
-    while (v->parent != nullptr) {
+    while (sentinel->parent != nullptr) {
+        sentinel = sentinel->parent;
+    }
+    // connects all nodes up the path directly to sentinel
+    while (v->parent != nullptr && v->parent != sentinel) {
+        Vertex* connect = v;
         v = v->parent;
+        connect->parent = sentinel;
     }
-
-    // connects all nodes up the path directly to parent
-    while (temp->parent != v) {
-        Vertex* connect = temp;
-        temp = temp->parent;
-        connect->parent = v;
-    }
-    return v;
+    return sentinel;
 }
 
 /* TODO */
-void Map::crucialRoads(vector<Edge*>& roads) {}
+void Map::crucialRoads(vector<Edge*>& roads) {
+    for (int i = 0; i < undirectedEdges.size(); i++) {
+        if (crucialBFS(undirectedEdges.at(i))) {
+            roads.push_back(undirectedEdges.at(i));
+        }
+    }
+}
+
+bool Map::crucialBFS(Edge* e) {
+    queue<Vertex*> vert;
+    Vertex* source = e->source;
+    Vertex* target = e->target;
+
+    vert.push(source);
+    while (vert.size() != 0) {
+        Vertex* curr = vert.front();
+        curr->done = true;
+        vert.pop();
+        for (int i = 0; i < curr->outEdges.size(); i++) {
+            Edge* currEdge = curr->outEdges.at(i);
+
+            // if edge is the edge we check, continue
+            if (currEdge == e) {
+                continue;
+            }
+
+            Vertex* t = currEdge->target;
+
+            // if there is a path to target, return false
+            if (t == target) {
+                return false;
+            }
+
+            // if t has already been visited before, continue
+            if (t->done) {
+                continue;
+            }
+            vert.push(t);
+        }
+    }
+    return true;
+}
 
 /* Destructor of Map graph */
 Map::~Map() {
