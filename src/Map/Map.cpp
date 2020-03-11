@@ -224,6 +224,9 @@ Vertex* Map::Find(Vertex* v) {
 /* TODO */
 void Map::crucialRoads(vector<Edge*>& roads) {
     for (int i = 0; i < undirectedEdges.size(); i++) {
+        for (int a = 0; a < vertices.size(); a++) {
+            vertices.at(a)->done = false;
+        }
         if (crucialBFS(undirectedEdges.at(i))) {
             roads.push_back(undirectedEdges.at(i));
         }
@@ -232,6 +235,7 @@ void Map::crucialRoads(vector<Edge*>& roads) {
 
 bool Map::crucialBFS(Edge* e) {
     queue<Vertex*> vert;
+
     Vertex* source = e->source;
     Vertex* target = e->target;
 
@@ -244,7 +248,8 @@ bool Map::crucialBFS(Edge* e) {
             Edge* currEdge = curr->outEdges.at(i);
 
             // if edge is the edge we check, continue
-            if (currEdge == e) {
+            if (currEdge->source == e->source &&
+                currEdge->target == e->target) {
                 continue;
             }
 
