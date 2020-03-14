@@ -27,9 +27,10 @@ class Edge {
 };
 
 struct EdgeComp {
-    /* TODO */
-    // overrides comparator taking in two edges and gives higher priority to
-    // smaller weight
+    /**
+     * overrides comparator taking in two edges and gives higher priority to
+     * smaller weight
+     */
     bool operator()(Edge* lhs, Edge* rhs) const {
         return lhs->weight > rhs->weight;
     }

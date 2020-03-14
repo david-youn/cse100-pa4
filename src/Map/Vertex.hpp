@@ -33,9 +33,10 @@ class Vertex {
 };
 
 struct VertexComp {
-    /* TODO */
-    // overrides comparator that takes in two vertices and weights returns
-    // higher priority which is smaller weight
+    /**
+     * overrides comparator that takes in two vertices and weights returns
+     * higher priority which is smaller weight
+     */
     bool operator()(pair<int, Vertex*> lhs, pair<int, Vertex*> rhs) const {
         return lhs.first > rhs.first;
     }

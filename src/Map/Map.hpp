@@ -35,27 +35,67 @@ class Map {
     bool addEdge(const string& name1, const string& name2);
 
   public:
-    /* TODO */
+    /**
+     * Default constructor for the map object
+     */
     Map();
 
     /* Build the map graph from vertex and edge files */
     bool buildMapFromFile(const string& vertexFileName,
                           const string& edgeFileName);
 
-    /* TODO */
+    /**
+     * Finds the shortest weighted path from vertex "from" to "to" in the map
+     * using Dijkstra's algorithm.
+     * Paramter(s): from - the string of the first vertex in the connection to
+     * find to - the string of the second vertex in the connection to find
+     *              shortestPath - the string containing the connection between
+     *                             the vertices
+     * Return: none
+     */
     void Dijkstra(const string& from, const string& to,
                   vector<Vertex*>& shortestPath);
 
-    /* TODO */
+    /**
+     * Method that finds all the undirected edges in the minimum spanning tree
+     * of the map graph. This method uses the helper functions Union() in order
+     * to implement Kruskal's algorithm. Parameter(s): MST - the vector that
+     * should be filled with all the edges in the minimum spanning tree Return:
+     * none
+     */
     void findMST(vector<Edge*>& MST);
 
+    /**
+     * Helper method to MST that connectes two subtrees or nodes using the
+     * sentinels of both as shown in Kruskal's algorithm.
+     * Parameter(s): edge - the edge between two nodes to compare
+     * Return: none
+     */
     void Union(Edge* edge);
 
+    /**
+     * Helper method for Union that finds the sentinel for a given vertex.
+     * Parameter(s): v - a pointer to the vertex to find
+     * Return: a vertex pointer returning the sentinel of the subtree that the
+     * node is currently in.
+     */
     Vertex* Find(Vertex* v);
 
-    /* TODO */
+    /**
+     * Finds all the edges representing crucial roads in the map graph using
+     * a BFS algorithm.
+     * Parameter(s): roads - a vector that should be filled with all the edges
+     *                       representing crucial roads
+     * Return: none
+     */
     void crucialRoads(vector<Edge*>& roads);
 
+    /**
+     * Helper method for crucialRoads that returns whether or not the edge is a
+     * crucialRoad by finding if a different path exists between the two
+     * vertices the edge connects. Parameter(s): e - the edge to decide Return:
+     * boolean representing whether or not the edge is a crucial road
+     */
     bool crucialBFS(Edge* e);
 
     /* Destructor of Map graph */

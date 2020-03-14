@@ -7,7 +7,9 @@
 
 using namespace std;
 
-/* TODO */
+/**
+ * Default constructor for the map object
+ */
 Map::Map() {}
 
 /* Build the map graph from vertex and edge files */
@@ -94,11 +96,21 @@ bool Map::addEdge(const string& name1, const string& name2) {
     return true;
 }
 
-/* TODO */
+/**
+ * Finds the shortest weighted path from vertex "from" to "to" in the map
+ * using Dijkstra's algorithm.
+ * Paramter(s): from - the string of the first vertex in the connection to find
+ *              to - the string of the second vertex in the connection to find
+ *              shortestPath - the string containing the connection between
+ *                             the vertices
+ * Return: none
+ */
 void Map::Dijkstra(const string& from, const string& to,
                    vector<Vertex*>& shortestPath) {
     priority_queue<pair<int, Vertex*>, vector<pair<int, Vertex*>>, VertexComp>
         pq;
+    // iterates through all vertices and sets the variables used in Dijkstra's
+    // algorithm to the default values
     for (int i = 0; i < vertices.size(); i++) {
         (vertices.at(i))->dist = INT_MAX;
         (vertices.at(i))->prev = nullptr;
@@ -158,7 +170,14 @@ void Map::Dijkstra(const string& from, const string& to,
     }
 }
 
-/* TODO */
+/**
+ * Method that finds all the undirected edges in the minimum spanning tree of
+ * the map graph. This method uses the helper functions Union() in order to
+ * implement Kruskal's algorithm.
+ * Parameter(s): MST - the vector that should be filled with all the edges
+ *                     in the minimum spanning tree
+ * Return: none
+ */
 void Map::findMST(vector<Edge*>& MST) {
     priority_queue<Edge*, vector<Edge*>, EdgeComp> edge_pq;
 
@@ -171,6 +190,7 @@ void Map::findMST(vector<Edge*>& MST) {
         undirectedEdges.at(i)->source->treeSize = 1;
     }
 
+    // iterates through all the undirected edges
     while (edge_pq.size() != 0) {
         Edge* curr = edge_pq.top();
 
@@ -178,6 +198,7 @@ void Map::findMST(vector<Edge*>& MST) {
         Union(curr);
     }
 
+    // goes through all the marked edges and fills the MST vector
     for (int e = 0; e < undirectedEdges.size(); e++) {
         if (undirectedEdges.at(e)->used == true) {
             undirectedEdges.at(e)->used = false;
@@ -186,15 +207,25 @@ void Map::findMST(vector<Edge*>& MST) {
     }
 }
 
+/**
+ * Helper method to MST that connectes two subtrees or nodes using the
+ * sentinels of both as shown in Kruskal's algorithm.
+ * Parameter(s): edge - the edge between two nodes to compare
+ * Return: none
+ */
 void Map::Union(Edge* edge) {
+    // creates variables for the two vertices that the edge connects
     Vertex* v1 = edge->source;
     Vertex* v2 = edge->target;
 
     Vertex* v1_sentinel = Find(v1);
     Vertex* v2_sentinel = Find(v2);
 
+    // if both nodes are in the same subtree, return
     if (v1_sentinel == v2_sentinel) {
         return;
+        // if one node is greater than the other, connect the lesser subtree to
+        // the greater one
     } else if (v1_sentinel->treeSize > v2_sentinel->treeSize) {
         v2_sentinel->parent = v1_sentinel;
         v1_sentinel->treeSize = v1_sentinel->treeSize + v2_sentinel->treeSize;
@@ -206,9 +237,15 @@ void Map::Union(Edge* edge) {
     }
 }
 
+/**
+ * Helper method for Union that finds the sentinel for a given vertex.
+ * Parameter(s): v - a pointer to the vertex to find
+ * Return: a vertex pointer returning the sentinel of the subtree that the node
+ *         is currently in.
+ */
 Vertex* Map::Find(Vertex* v) {
     Vertex* sentinel = v;
-    // finds parent node
+    // finds the sentinel of the entire subtree
     while (sentinel->parent != nullptr) {
         sentinel = sentinel->parent;
     }
@@ -221,33 +258,54 @@ Vertex* Map::Find(Vertex* v) {
     return sentinel;
 }
 
-/* TODO */
+/**
+ * Finds all the edges representing crucial roads in the map graph using
+ * a BFS algorithm.
+ * Parameter(s): roads - a vector that should be filled with all the edges
+ *                       representing crucial roads
+ * Return: none
+ */
 void Map::crucialRoads(vector<Edge*>& roads) {
+    // iterates through every edge in the map
     for (int i = 0; i < undirectedEdges.size(); i++) {
+        // for each iteration, reset all vertices and their variables used
+        // in the BFS search
         for (int a = 0; a < vertices.size(); a++) {
             vertices.at(a)->done = false;
         }
+        // if the edge is a crucial road, add it to the roads vector
         if (crucialBFS(undirectedEdges.at(i))) {
             roads.push_back(undirectedEdges.at(i));
         }
     }
 }
 
+/**
+ * Helper method for crucialRoads that returns whether or not the edge is a
+ * crucialRoad by finding if a different path exists between the two vertices
+ * the edge connects.
+ * Parameter(s): e - the edge to decide
+ * Return: boolean representing whether or not the edge is a crucial road
+ */
 bool Map::crucialBFS(Edge* e) {
     queue<Vertex*> vert;
 
+    // creates variables for the two vertices the edge connects
     Vertex* source = e->source;
     Vertex* target = e->target;
 
     vert.push(source);
+    // iterates through the tree using a BFS algorithm to check whether
+    // a different path exists to the target node
     while (vert.size() != 0) {
         Vertex* curr = vert.front();
         curr->done = true;
         vert.pop();
+        // iterates through the all edges the current vertex is connected to
         for (int i = 0; i < curr->outEdges.size(); i++) {
             Edge* currEdge = curr->outEdges.at(i);
 
-            // if edge is the edge we check, continue
+            // if edge is the edge we are checking as the crucial road, move on
             if (currEdge->source == e->source &&
                 currEdge->target == e->target) {
                 continue;

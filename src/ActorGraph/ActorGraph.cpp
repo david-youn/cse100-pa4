@@ -1,5 +1,15 @@
 /**
- * TODO: add file header
+ * Name(s): David Youn - A15452585
+ *          Jonathan Yun - A15431969
+ *
+ * Email(s): dayoun@ucsd.edu
+ *           j3yun@ucsd.edu
+ *
+ * Source(s): Stepik textbook
+ *
+ * This file contains the method implementations for functions used by the
+ * ActorGraph object. This file is used in conjunction with the file
+ * ActorGraph.hpp in order to implement the methods declared.
  */
 
 #include "ActorGraph.hpp"
@@ -11,7 +21,9 @@
 
 using namespace std;
 
-/* TODO */
+/**
+ * Default constructor for the ActorGraph object
+ */
 ActorGraph::ActorGraph() {}
 
 /* Build the actor graph from dataset file.
@@ -87,21 +99,34 @@ bool ActorGraph::buildGraphFromFile(const char* filename) {
     return true;
 }
 
-/* TODO */
+/**
+ * Method that finds the unweighted shortest path from one Actor to another
+ * through movie connections and Breadth First Search.
+ * Parameter(s): fromActor - the name of the first actor to find the connection
+ *               toActor - the name of the second actor to find the connection
+ *                         between
+ *               shortestPath - the string that contains the required format
+ *                              showing the shortest path between two actors
+ * Return: none
+ */
 void ActorGraph::BFS(const string& fromActor, const string& toActor,
                      string& shortestPath) {
     // vector to hold all actors and movies added to the pq
     vector<Movie*> ms;
     vector<Actor*> as;
 
+    // queue that holds all the actors to find
     queue<Actor*> toExplore;
+    // attemps to find the actor fromActor in the Actor hashfunction
     try {
         Actor* toFind = Actors.at(fromActor);
         toExplore.push(toFind);
 
+        // if the actor doesn't exist in the database, return
     } catch (exception& e) {
         return;
     }
+
     while (toExplore.size() != 0) {
         Actor* curr = toExplore.front();
         curr->visited = true;
@@ -146,11 +171,13 @@ void ActorGraph::BFS(const string& fromActor, const string& toActor,
                     while (toExplore.size() != 0) {
                         toExplore.pop();
                     }
+                    // resets all variables for every actor visited
                     for (int a = 0; a < as.size(); a++) {
                         Actor* myActor = as.at(a);
                         myActor->visited = false;
                         myActor->prevMovie = nullptr;
                     }
+                    // resets all variables for every movie visited
                     for (int m = 0; m < ms.size(); m++) {
                         Movie* myMovie = ms.at(m);
                         myMovie->visited = false;
@@ -163,11 +190,13 @@ void ActorGraph::BFS(const string& fromActor, const string& toActor,
             }
         }
     }
+    // resets all variables for every actor visited
     for (int a = 0; a < as.size(); a++) {
         Actor* myActor = as.at(a);
         myActor->visited = false;
         myActor->prevMovie = nullptr;
     }
+    // resets all variables for every movie visited
     for (int m = 0; m < ms.size(); m++) {
         Movie* myMovie = ms.at(m);
         myMovie->visited = false;
@@ -175,7 +204,15 @@ void ActorGraph::BFS(const string& fromActor, const string& toActor,
     }
 }
 
-// small tester function
+/**
+ * Tester method that manually inserts actors and movies into the corresponding
+ * hashfuncitons to test the method BFS().
+ * Parameter(s): a, b, c, d, e - actor objects to insert into the Actors
+ *                               hashfunction
+ *               m1, m2, m3, m4, m5 - movie objects to insert into the Movies
+ *                                    hashfunction
+ * Return: none
+ */
 void ActorGraph::smallTest(Actor* a, Actor* b, Actor* c, Actor* d, Actor* e,
                            Movie* m1, Movie* m2, Movie* m3, Movie* m4,
                            Movie* m5) {
@@ -192,12 +229,16 @@ void ActorGraph::smallTest(Actor* a, Actor* b, Actor* c, Actor* d, Actor* e,
     Movies.insert({m5->fullT, m5});
 }
 
-/* TODO */
+/**
+ *  Extra credit method we did not implement
+ */
 void ActorGraph::predictLink(const string& queryActor,
                              vector<string>& predictionNames,
                              unsigned int numPrediction) {}
 
-/* TODO */
+/**
+ * Default default constructor that frees all allocated memory
+ */
 ActorGraph::~ActorGraph() {
     for (auto m = Movies.begin(); m != Movies.end(); m++) {
         delete (Movies.at(m->first));
